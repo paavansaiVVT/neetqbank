@@ -7,9 +7,8 @@
 .env
 .env.*
 
-# Frontend build artifacts (not needed in API container)
-frontend/node_modules
-frontend/dist
+# Frontend (not needed in API container, also clashes with pymupdf internal 'frontend' module)
+frontend/
 
 # Python virtual environments
 venv/
