@@ -1,13 +1,17 @@
 FROM python:3.12-slim
 WORKDIR /app
 
-# Install system dependencies needed for building Python packages
+# Install ALL system dependencies needed for Python package compilation
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gcc \
     g++ \
     libpq-dev \
     libffi-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libssl-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching

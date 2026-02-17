@@ -9,7 +9,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t topall-b2b-mt .
+      - docker build --progress=plain -t topall-b2b-mt .
       - docker tag topall-b2b-mt:latest 885134767910.dkr.ecr.ap-south-1.amazonaws.com/topallapp:latest
   post_build:
     commands:
