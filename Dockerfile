@@ -1,7 +1,7 @@
 FROM python:3.12-slim
 WORKDIR /app
 
-# Install ALL system dependencies needed for Python package compilation
+# Install system dependencies for building C extensions
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gcc \
@@ -14,9 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
+# Copy and install requirements with verbose output to diagnose failures
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt 2>&1 || \
+    (echo "=== PIP INSTALL FAILED ===" && pip install --no-cache-dir -r requirements.txt --verbose && exit 1)
 
 # Now copy the rest of the code
 COPY . .
