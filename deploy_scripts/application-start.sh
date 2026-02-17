@@ -37,7 +37,7 @@ RUN_CMD="${RUN_CMD} -e PYTHONUNBUFFERED=1"
 if [ -f "${ENV_FILE}" ]; then
     echo "Loading environment from ${ENV_FILE}"
     # Clean .env file: remove spaces around '=' (Docker --env-file doesn't allow them)
-    CLEAN_ENV_FILE="${DEPLOY_DIR}/.env.clean"
+    CLEAN_ENV_FILE="/tmp/.env.clean"
     grep -v '^\s*#' "${ENV_FILE}" | grep -v '^\s*$' | sed 's/\s*=\s*/=/' > "${CLEAN_ENV_FILE}"
     RUN_CMD="${RUN_CMD} --env-file ${CLEAN_ENV_FILE}"
 else
