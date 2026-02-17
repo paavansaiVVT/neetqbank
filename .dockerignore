@@ -1,0 +1,60 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Environment files (secrets - never bake into image)
+.env
+.env.*
+
+# Frontend build artifacts (not needed in API container)
+frontend/node_modules
+frontend/dist
+
+# Python virtual environments
+venv/
+env/
+newenv/
+myenv/
+
+# Python bytecode
+__pycache__
+*.pyc
+*.pyo
+
+# Logs
+*.log
+output.log
+worker.log
+worker2.log
+worker3.log
+nohup.out
+
+# Tests (not needed in production image)
+tests/
+
+# Deploy scripts (only used by CodeDeploy, not inside the container)
+deploy_scripts/
+
+# CI/CD config (not needed inside container)
+appspec.yml
+buildspec.yml
+docker-compose-dev.yml
+docker-compose-prod.yml
+
+# Docker config (avoid recursive copy)
+Dockerfile
+.dockerignore
+
+# IDE and OS files
+.idea/
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+current_plan.md
+
+# Gemini/agent artifacts
+.gemini/
+.agent/

@@ -1,0 +1,22 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/vvts-code-deploy/neet-clarification-bot-api
+    file_exists_behavior: OVERWRITE
+
+permissions:
+  - object: /home/ubuntu/vvts-code-deploy/neet-clarification-bot-api/deploy_scripts
+    pattern: "*.sh"
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
+    type:
+      - file
+
+hooks:
+  ApplicationStart:
+    - location: deploy_scripts/application-start.sh
+      timeout: 900
+      runas: ubuntu

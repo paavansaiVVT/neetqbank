@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: topall-container
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    network_mode: "bridge"
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env

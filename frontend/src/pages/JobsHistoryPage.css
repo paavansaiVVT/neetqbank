@@ -1,0 +1,105 @@
+/* JobsHistoryPage.css */
+
+.jobs-page-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.jobs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.jobs-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0;
+}
+
+.jobs-controls {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.search-input {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    width: 280px;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px var(--primary-50, rgba(99, 102, 241, 0.1));
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-4);
+}
+
+/* Table enhancements */
+.jobs-table-container {
+    border-radius: var(--radius-lg, 12px);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+}
+
+.jobs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.jobs-table thead {
+    background: var(--gray-50, #f9fafb);
+}
+
+.jobs-table th {
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+    white-space: nowrap;
+    user-select: none;
+}
+
+.jobs-table td {
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--gray-700);
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: middle;
+}
+
+.jobs-table tbody tr:hover {
+    background: var(--gray-50, #f9fafb);
+}
+
+.jobs-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .jobs-header {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+
+    .search-input {
+        width: 200px;
+    }
+}

@@ -1,0 +1,6 @@
+[
+  {
+    "name": "topall-container",
+    "imageUri": "885134767910.dkr.ecr.ap-south-1.amazonaws.com/topallapp:latest"
+  }
+]

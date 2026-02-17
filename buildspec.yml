@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 885134767910.dkr.ecr.ap-south-1.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t topall-b2b-mt .
+      - docker tag topall-b2b-mt:latest 885134767910.dkr.ecr.ap-south-1.amazonaws.com/topallapp:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 885134767910.dkr.ecr.ap-south-1.amazonaws.com/topallapp:latest
+      - echo Writing deployment file...
+      - printf '[{"name":"topall-container","imageUri":"885134767910.dkr.ecr.ap-south-1.amazonaws.com/topallapp:latest"}]' > imagedefinitions.json
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: no

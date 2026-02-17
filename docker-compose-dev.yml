@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: qbank_v2_redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cs_neet_clarification_bot_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    environment:
+      - PYTHONUNBUFFERED=1
+      - QBANK_V2_REDIS_URL=redis://redis:6379/0
+    env_file:
+      - .env
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: qbank_v2_worker
+    command: ["python", "-m", "question_banks.v2.worker"]
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    environment:
+      - PYTHONUNBUFFERED=1
+      - QBANK_V2_REDIS_URL=redis://redis:6379/0
+    env_file:
+      - .env
