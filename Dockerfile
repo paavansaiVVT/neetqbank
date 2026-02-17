@@ -7,14 +7,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     g++ \
     libpq-dev \
+    libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Install playwright browsers (chromium only to save space)
-RUN playwright install --with-deps chromium
 
 # Now copy the rest of the code
 COPY . .

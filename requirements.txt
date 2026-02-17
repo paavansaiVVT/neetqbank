@@ -13,13 +13,13 @@ requests>=2.32.5,<3.0.0
 pymupdf==1.25.1
 scikit-learn==1.6.0
 openpyxl==3.1.5
-streamlit==1.41.1
+# streamlit==1.41.1  # Not needed in production API container
 SQLAlchemy==2.0.36
 # mysqlclient==2.2.6  # Commented out - using pymysql instead (pure Python)
 pymysql==1.1.1
 aiomysql==0.2.0
 bs4==0.0.2
-playwright==1.49.1
+# playwright==1.49.1  # Not needed in production API container (used only by scraper utils)
 w3lib==2.2.1
 extruct==0.18.0
 redis==5.2.1
