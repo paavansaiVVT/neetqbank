@@ -14,10 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy and install requirements with verbose output to diagnose failures
+# Copy requirements first for better caching
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt 2>&1 || \
-    (echo "=== PIP INSTALL FAILED ===" && pip install --no-cache-dir -r requirements.txt --verbose && exit 1)
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Now copy the rest of the code
 COPY . .
