@@ -12,22 +12,22 @@ ENV_FILE="${DEPLOY_DIR}/.env"
 # --- ECR Login ---
 echo "Logging into ECR..."
 aws ecr get-login-password --region ap-south-1 | \
-    docker login --username AWS --password-stdin "${AWS_ACCOUNT_URI}"
+    sudo docker login --username AWS --password-stdin "${AWS_ACCOUNT_URI}"
 
 # --- Pull latest image ---
 echo "Pulling image: ${FULL_IMAGE_URI}"
-docker pull "${FULL_IMAGE_URI}"
+sudo docker pull "${FULL_IMAGE_URI}"
 
 # --- Stop old container ---
 echo "Stopping and removing old container..."
-docker stop "${CONTAINER_NAME}" 2>/dev/null || true
-docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
+sudo docker stop "${CONTAINER_NAME}" 2>/dev/null || true
+sudo docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
 
 # --- Start new container ---
 echo "Starting new container..."
 
 # Build the docker run command
-RUN_CMD="docker run -d"
+RUN_CMD="sudo docker run -d"
 RUN_CMD="${RUN_CMD} -p 8000:8000"
 RUN_CMD="${RUN_CMD} --name ${CONTAINER_NAME}"
 RUN_CMD="${RUN_CMD} --restart unless-stopped"
@@ -56,7 +56,7 @@ for i in $(seq 1 ${MAX_RETRIES}); do
     if [ "$i" -eq "${MAX_RETRIES}" ]; then
         echo "ERROR: Health check failed after ${MAX_RETRIES} attempts"
         echo "--- Container logs ---"
-        docker logs "${CONTAINER_NAME}" --tail 50
+        sudo docker logs "${CONTAINER_NAME}" --tail 50
         exit 1
     fi
     echo "Attempt ${i}/${MAX_RETRIES}: waiting ${RETRY_INTERVAL}s..."
@@ -65,6 +65,6 @@ done
 
 # --- Cleanup ---
 echo "Removing unused images..."
-docker image prune -f
+sudo docker image prune -f
 
 echo "Deployment completed successfully."
