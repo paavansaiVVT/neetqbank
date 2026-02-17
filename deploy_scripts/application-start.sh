@@ -36,9 +36,12 @@ RUN_CMD="${RUN_CMD} -e PYTHONUNBUFFERED=1"
 # Pass .env file if it exists on the server
 if [ -f "${ENV_FILE}" ]; then
     echo "Loading environment from ${ENV_FILE}"
-    # Clean .env file: remove spaces around '=' (Docker --env-file doesn't allow them)
+    # Clean .env file for Docker --env-file compatibility:
+    # 1. Remove comment lines and blank lines
+    # 2. Remove spaces around '='
+    # 3. Strip surrounding double quotes from values (Docker treats them as literal)
     CLEAN_ENV_FILE="/tmp/.env.clean"
-    grep -v '^\s*#' "${ENV_FILE}" | grep -v '^\s*$' | sed 's/\s*=\s*/=/' > "${CLEAN_ENV_FILE}"
+    grep -v '^\s*#' "${ENV_FILE}" | grep -v '^\s*$' | sed 's/\s*=\s*/=/' | sed 's/="\(.*\)"$/=\1/' > "${CLEAN_ENV_FILE}"
     RUN_CMD="${RUN_CMD} --env-file ${CLEAN_ENV_FILE}"
 else
     echo "WARNING: No .env file found at ${ENV_FILE}"
