@@ -1,14 +1,20 @@
 FROM python:3.12-slim
 WORKDIR /app
 
-# Install minimal system dependencies
+# Install system dependencies needed for building Python packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    gcc \
+    g++ \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install playwright browsers (chromium only to save space)
+RUN playwright install --with-deps chromium
 
 # Now copy the rest of the code
 COPY . .
