@@ -59,7 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, []);
 
     const login = useCallback(async (email: string, password: string) => {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '' : `${window.location.protocol}//${window.location.hostname}:8000`);
 
         const response = await fetch(`${baseUrl}/v2/qbank/auth/login`, {
             method: 'POST',
