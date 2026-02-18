@@ -73,4 +73,25 @@ done
 echo "Removing unused images..."
 sudo docker image prune -f
 
+# --- Frontend Build & Serve ---
+FRONTEND_DIR="${DEPLOY_DIR}/frontend"
+if [ -d "${FRONTEND_DIR}" ]; then
+    echo "Building frontend..."
+    cd "${FRONTEND_DIR}"
+    npm install --production=false
+    npm run build
+
+    # Stop any existing frontend server
+    pkill -f "serve -s dist" || true
+    sleep 1
+
+    # Start frontend server (SPA mode on port 3000)
+    echo "Starting frontend server on port 3000..."
+    nohup npx serve -s dist -l 3000 > /tmp/frontend.log 2>&1 &
+
+    echo "Frontend deployed successfully."
+else
+    echo "WARNING: No frontend directory found at ${FRONTEND_DIR}, skipping frontend deploy."
+fi
+
 echo "Deployment completed successfully."
