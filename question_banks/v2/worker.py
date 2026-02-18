@@ -250,6 +250,7 @@ class QbankV2Worker:
             try:
                 job_payload = await self.queue.dequeue_job()
                 if not job_payload:
+                    await asyncio.sleep(1)  # Prevent busy loop if Redis is down/empty
                     continue
 
                 job_id = self._decode_job_payload(job_payload)
