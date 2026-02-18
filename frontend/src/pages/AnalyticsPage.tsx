@@ -3,8 +3,14 @@ import { QbankApiClient } from '../api/client';
 import type { AnalyticsResponse } from '../api/types';
 import './AnalyticsPage.css';
 
+const getBaseUrl = () => {
+    if (import.meta.env.VITE_API_BASE_URL) return import.meta.env.VITE_API_BASE_URL;
+    if (import.meta.env.DEV) return '';
+    return `${window.location.protocol}//${window.location.hostname}:8000`;
+};
+
 const api = new QbankApiClient(
-    import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
+    getBaseUrl(),
     import.meta.env.VITE_QBANK_API_KEY || ''
 );
 

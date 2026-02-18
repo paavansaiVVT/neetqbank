@@ -73,25 +73,59 @@ done
 echo "Removing unused images..."
 sudo docker image prune -f
 
+echo "Backend deployment completed successfully."
+
+# ===================================================================
 # --- Frontend Build & Serve ---
+# IMPORTANT: This section runs with set +e so frontend failures
+# do NOT cause the entire deployment to rollback (backend is already up)
+# ===================================================================
+set +e
+
 FRONTEND_DIR="${DEPLOY_DIR}/frontend"
 if [ -d "${FRONTEND_DIR}" ]; then
-    echo "Building frontend..."
+    echo "=== Starting frontend deployment ==="
     cd "${FRONTEND_DIR}"
-    npm install --production=false
-    npm run build
 
-    # Stop any existing frontend server
+    # Stop any existing frontend server first
+    echo "Stopping old frontend server..."
     pkill -f "serve -s dist" || true
     sleep 1
 
-    # Start frontend server (SPA mode on port 3000)
-    echo "Starting frontend server on port 3000..."
-    nohup npx serve -s dist -l 3000 > /tmp/frontend.log 2>&1 &
+    # Install dependencies
+    echo "Installing frontend dependencies..."
+    npm install 2>&1
+    if [ $? -ne 0 ]; then
+        echo "WARNING: npm install failed, trying to serve existing dist..."
+    else
+        # Build the frontend
+        echo "Building frontend..."
+        npm run build 2>&1
+        if [ $? -ne 0 ]; then
+            echo "WARNING: npm run build failed, trying to serve existing dist..."
+        fi
+    fi
 
-    echo "Frontend deployed successfully."
+    # Start frontend server if dist directory exists
+    if [ -d "${FRONTEND_DIR}/dist" ]; then
+        echo "Starting frontend server on port 3000 (SPA mode)..."
+        nohup npx serve -s dist -l 3000 > /tmp/frontend.log 2>&1 &
+        sleep 2
+
+        # Quick frontend health check
+        if curl -sf http://localhost:3000 > /dev/null 2>&1; then
+            echo "Frontend server is running on port 3000."
+        else
+            echo "WARNING: Frontend server may not have started. Check /tmp/frontend.log"
+        fi
+    else
+        echo "WARNING: No dist directory found. Frontend not served."
+    fi
+
+    echo "=== Frontend deployment finished ==="
 else
     echo "WARNING: No frontend directory found at ${FRONTEND_DIR}, skipping frontend deploy."
 fi
 
-echo "Deployment completed successfully."
+set -e
+echo "Full deployment completed successfully."
