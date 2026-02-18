@@ -28,7 +28,11 @@ export function LoginPage() {
             await login(email, password);
             navigate(from, { replace: true });
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Login failed');
+            if (err instanceof TypeError && err.message === 'Failed to fetch') {
+                setError('Cannot connect to the server. Make sure the backend is running on port 8000.');
+            } else {
+                setError(err instanceof Error ? err.message : 'Login failed');
+            }
         } finally {
             setIsLoading(false);
         }

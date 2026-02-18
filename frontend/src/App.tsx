@@ -39,7 +39,7 @@ function PageLoader() {
 }
 
 export default function App() {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+  const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
   const apiKey = import.meta.env.VITE_QBANK_API_KEY ?? "";
 
   return (
